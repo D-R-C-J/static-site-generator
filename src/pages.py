@@ -5,7 +5,7 @@ from splitblocks import markdown_to_html_node
 current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.dirname(current_dir)
 
-public_path = os.path.join(root_dir, "public")
+public_path = os.path.join(root_dir, "docs")
 static_path = os.path.join(root_dir, "static")
 
 def copy_to_destination():
