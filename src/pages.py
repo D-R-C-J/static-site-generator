@@ -38,3 +38,22 @@ def generate_page(from_path, template_path, dest_path):
     with open(dest_path, "w", encoding="utf-8") as f:
         f.write(template)
         
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    list_of_files = os.listdir(dir_path_content)
+    for file_name in list_of_files:
+        if os.path.isfile(os.path.join(dir_path_content, file_name)):
+            if file_name.endswith(".md"):
+                with open(os.path.join(dir_path_content, file_name), "r", encoding="utf-8") as f:
+                    markdown = f.read()
+                with open(template_path, "r", encoding="utf-8") as f:
+                    template = f.read()
+                converted_markdown = markdown_to_html_node(markdown)
+                html_string = converted_markdown.to_html()
+                title = extract_title(markdown)
+                template = template.replace("{{ Title }}", title)
+                template = template.replace("{{ Content }}", html_string)
+                os.makedirs(dest_dir_path, exist_ok=True)
+                with open(os.path.join(dest_dir_path, file_name.replace(".md", ".html")), "w", encoding="utf-8") as f:
+                    f.write(template)
+        elif os.path.isdir(os.path.join(dir_path_content, file_name)):
+            generate_pages_recursive(os.path.join(dir_path_content, file_name), template_path, os.path.join(dest_dir_path, file_name))
